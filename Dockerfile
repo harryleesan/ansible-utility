@@ -1,0 +1,45 @@
+FROM python:3.8-alpine
+LABEL maintainer="Harry Lee <harry@melio.co.za>"
+LABEL description="An utility image that is meant to be used for ansible + terraform deployments."
+
+RUN apk upgrade --update
+
+ENV TIME_ZONE Africa/Johannesburg
+RUN apk add tzdata && \
+    echo "$TIME_ZONE" > /etc/timezone
+
+RUN apk add \
+    build-base \
+    libffi-dev \
+    libressl-dev \
+    openssh-client \
+    jq \
+    groff \
+    git
+
+ENV ANSIBLE_VERSION 2.9.0
+RUN pip install --upgrade pip \
+    pyopenssl \
+    ansible=="$ANSIBLE_VERSION" \
+    awscli \
+    yq
+
+COPY requirements.txt .
+RUN pip install -r requirements.txt
+
+ENV TERRAFORM_VERSION 0.12.13
+
+ADD https://releases.hashicorp.com/terraform/"$TERRAFORM_VERSION"/terraform_"$TERRAFORM_VERSION"_linux_amd64.zip /usr/local/bin/terraform_"$TERRAFORM_VERSION"_linux_amd64.zip
+RUN unzip -q -d /usr/local/bin /usr/local/bin/terraform_"$TERRAFORM_VERSION"_linux_amd64.zip && \
+    chmod +x /usr/local/bin/terraform && \
+    rm -f /usr/local/bin/terraform_"$TERRAFORM_VERSION"_linux_amd64.zip
+
+ENV GO_VERSION 1.13.4
+ENV GOPATH /go
+ENV PATH $GOPATH/bin:/usr/local/go/bin:$PATH
+
+ADD https://dl.google.com/go/go"$GO_VERSION".linux-amd64.tar.gz /usr/local/go.tar.gz
+RUN tar xfz /usr/local/go.tar.gz && \
+    rm -f go.tar.gz && \
+    mkdir -p "$GOPATH/src" "$GOPATH/bin" && chmod -R 777 "$GOPATH"
+

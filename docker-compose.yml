@@ -1,0 +1,13 @@
+version: '3.7'
+services:
+  utility:
+    container_name: ansible-utility
+    build: ./
+    image: halosan/ansible-utility:latest
+    volumes:
+      - ./:/opt/
+    environment:
+      ANSIBLE_HOST_KEY_CHECKING: "FALSE"
+    env_file: .env
+    command: tail -f /dev/null
+    working_dir: /opt
