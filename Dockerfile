@@ -25,7 +25,8 @@ RUN pip install --upgrade pip \
     yq
 
 COPY requirements.txt .
-RUN pip install -r requirements.txt
+RUN pip install -r requirements.txt && \
+    rm -fr requirements.txt
 
 ENV TERRAFORM_VERSION 0.12.13
 
