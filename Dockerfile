@@ -15,6 +15,7 @@ RUN apk add \
     openssh-client \
     jq \
     groff \
+    tar \
     git
 
 ENV ANSIBLE_VERSION 2.9.0
