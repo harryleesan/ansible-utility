@@ -19,7 +19,7 @@ RUN apk add \
     git \
     gcc \
     musl-dev \
-    python3-dev \
+    python3-dev
 
 ENV ANSIBLE_VERSION 2.11.0
 RUN pip install --upgrade pip \
