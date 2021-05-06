@@ -45,7 +45,7 @@ RUN tar xfz /usr/local/go.tar.gz && \
     rm -f go.tar.gz && \
     mkdir -p "$GOPATH/src" "$GOPATH/bin" && chmod -R 777 "$GOPATH"
 
-ENV KUBECTL_VERSION 1.16.7
+ENV KUBECTL_VERSION 1.19.10
 ADD https://storage.googleapis.com/kubernetes-release/release/v"$KUBECTL_VERSION"/bin/linux/amd64/kubectl /usr/local/bin/kubectl
 RUN chmod +x /usr/local/bin/kubectl
 
