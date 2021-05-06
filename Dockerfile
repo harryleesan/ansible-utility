@@ -1,4 +1,4 @@
-FROM python:3.8-alpine
+FROM python:3.9-alpine
 LABEL maintainer="Harry Lee <harry@melio.co.za>"
 LABEL description="An utility image that is meant to be used for ansible + terraform deployments."
 
@@ -18,10 +18,10 @@ RUN apk add \
     tar \
     git
 
-ENV ANSIBLE_VERSION 2.9.0
+ENV ANSIBLE_VERSION 2.11.0
 RUN pip install --upgrade pip \
     pyopenssl \
-    ansible=="$ANSIBLE_VERSION" \
+    ansible-core=="$ANSIBLE_VERSION" \
     awscli \
     yq
 
@@ -29,7 +29,7 @@ COPY requirements.txt .
 RUN pip install -r requirements.txt && \
     rm -fr requirements.txt
 
-ENV TERRAFORM_VERSION 0.12.13
+ENV TERRAFORM_VERSION 0.15.1
 
 ADD https://releases.hashicorp.com/terraform/"$TERRAFORM_VERSION"/terraform_"$TERRAFORM_VERSION"_linux_amd64.zip /usr/local/bin/terraform_"$TERRAFORM_VERSION"_linux_amd64.zip
 RUN unzip -q -d /usr/local/bin /usr/local/bin/terraform_"$TERRAFORM_VERSION"_linux_amd64.zip && \
