@@ -19,7 +19,8 @@ RUN apk add \
     git \
     gcc \
     musl-dev \
-    python3-dev
+    python3-dev \
+    cargo
 
 ENV ANSIBLE_VERSION 2.11.0
 RUN pip install --upgrade pip \
@@ -27,10 +28,6 @@ RUN pip install --upgrade pip \
     ansible-core=="$ANSIBLE_VERSION" \
     awscli \
     yq
-
-COPY requirements.txt .
-RUN pip install -r requirements.txt && \
-    rm -fr requirements.txt
 
 ENV TERRAFORM_VERSION 0.15.1
 
@@ -48,3 +45,10 @@ RUN tar xfz /usr/local/go.tar.gz && \
     rm -f go.tar.gz && \
     mkdir -p "$GOPATH/src" "$GOPATH/bin" && chmod -R 777 "$GOPATH"
 
+ENV KUBECTL_VERSION 1.19.10
+ADD https://storage.googleapis.com/kubernetes-release/release/v"$KUBECTL_VERSION"/bin/linux/amd64/kubectl /usr/local/bin/kubectl
+RUN chmod +x /usr/local/bin/kubectl
+
+COPY requirements.txt .
+RUN pip install -r requirements.txt && \
+    rm -fr requirements.txt
