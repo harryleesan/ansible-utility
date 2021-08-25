@@ -1,0 +1,27 @@
+FROM quay.io/ansible/awx-ee:0.6.0 
+
+USER root
+
+RUN pip install --upgrade pip \
+    pyopenssl \
+    awscli \
+    yq
+
+RUN curl -LO https://github.com/kubernetes/kops/releases/download/$(curl -s https://api.github.com/repos/kubernetes/kops/releases/latest | grep tag_name | cut -d '"' -f 4)/kops-linux-amd64 \
+  && chmod +x kops-linux-amd64 \
+  && mv kops-linux-amd64 /usr/local/bin/kops
+
+ENV KUBECTL_VERSION 1.21.3
+
+ADD https://storage.googleapis.com/kubernetes-release/release/v"$KUBECTL_VERSION"/bin/linux/amd64/kubectl /usr/local/bin/kubectl
+RUN chmod +x /usr/local/bin/kubectl
+
+COPY requirements.txt .
+RUN pip install -r requirements.txt && \
+    rm -fr requirements.txt
+
+COPY requirements.yml .
+RUN ansible-galaxy collection install -r requirements.yml && \
+    rm -fr requirements.yml
+
+USER 1000

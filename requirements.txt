@@ -1,1 +1,9 @@
-jinja2==2.11.3
+openshift
+PyYAML
+kubernetes-validate
+botocore
+boto
+boto3
+PyOpenSSL
+dnspython
+passlib[bcrypt]
